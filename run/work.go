@@ -142,7 +142,11 @@ func WorkStart() {
 		origin = fmt.Sprintf("%s/%s/%s", origins[0], origins[1], origins[2])
 	}
 	nodeName, _ := os.Hostname()
-	wsUrl := fmt.Sprintf("%s/ws?action=hios&mode=%s&token=%s&name=%s&cid=%s&ver=%s&sha=%s", origin, os.Getenv("HI_MODE"), os.Getenv("HI_TOKEN"), nodeName, os.Getenv("HI_CID"), version.Version, version.CommitSHA)
+	nonce := RandString(8)
+	ts := time.Now().Unix()
+	secret := os.Getenv("HI_TOKEN")
+	token := StringMd5(fmt.Sprintf("nonce=%s&ts=%d&ver=%s%s", nonce, ts, version.Version, secret))
+	wsUrl := fmt.Sprintf("%s/ws?action=hios&mode=%s&token=%s&name=%s&cid=%s&ver=%s&sha=%s&nonce=%s&ts=%d", origin, os.Getenv("HI_MODE"), token, nodeName, os.Getenv("HI_CID"), version.Version, version.CommitSHA, nonce, ts)
 	//
 	err := Mkdir(logDir, 0755)
 	if err != nil {
