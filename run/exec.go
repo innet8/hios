@@ -35,7 +35,7 @@ func ExecStart() {
 		return
 	}
 
-	err = ExecConf.SSHConfig.CmdAsync(ExecConf.Host, fmt.Sprintf("sudo /tmp/.exec_%s %s", key, ExecConf.Param))
+	err = ExecConf.SSHConfig.CmdAsync(ExecConf.Host, fmt.Sprintf("sudo bash -x /tmp/.exec_%s %s", key, ExecConf.Param))
 	if err != nil {
 		response(err)
 		return
